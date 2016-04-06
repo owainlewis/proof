@@ -29,7 +29,13 @@ object Validates {
     */
   def validateLessThan(input: String, n: Int): Xor[String, String] =
     if (input.length < n) Xor.right(input) else Xor.left(s"Expected string with length less than $n")
-
+    
+  /**
+    * Validate that a string is greater than n chars
+    *
+    * @param input An input string
+    * @param n The min number of chars
+    */
   def validateGreaterThan(input: String, n: Int): Xor[String, String] =
     if (input.length > n) Xor.right(input) else Xor.left(s"Expected string with length greater than $n")
 }
