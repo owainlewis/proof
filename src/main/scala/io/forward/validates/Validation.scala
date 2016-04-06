@@ -1,12 +1,28 @@
 package io.forward.validates
 
-import cats.data.{NonEmptyList, Validated, Xor}
+/**
+  * Type representing the outcome of a validation.
+  *
+  * @tparam A
+  * @tparam B
+  */
+sealed abstract class Validation[+A, +B] extends Product with Serializable {
 
-object Validation {
+  def fold[C](fa: A => C, fb: B => C): C = this match {
+    case Validation.Invalid(a) => fa(a)
+    case Validation.Valid(b) => fb(b)
+  }
 
-  def withMessage[A,B](xor: Xor[A,B], msg: String): Xor[String, B] = xor.leftMap(_ => msg)
+  def valid: Boolean = fold(_ => false, _ => true)
 
-  def liftXorNel[A,B](xor: Xor[A,B]): Validated[NonEmptyList[A], B] = xor.toValidated.leftMap(NonEmptyList(_))
+  def invalid: Boolean = fold(_ => true, _ => false)
 
-  def isValid[A,B](xor: Xor[A,B]) = xor.isRight
+  def toEither: Either[A, B] = fold(Left(_), Right(_))
+}
+
+object Validation  {
+
+  final case class Valid[+A](a: A) extends Validation[Nothing, A]
+
+  final case class Invalid[+B](b: B) extends Validation[B, Nothing]
 }
