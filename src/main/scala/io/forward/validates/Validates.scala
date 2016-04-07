@@ -10,7 +10,7 @@ object Validates {
     * Wraps a default validation with an additional field name if an error is thrown.
     */
   def withFieldName[A,B](fieldName: String, xor: Xor[A,B]) =
-    xor.leftMap(f => s"$fieldName: $f")
+    xor.leftMap(msg => s"$fieldName: $msg")
 
   /**
     * Validate that a string is exactly some length
