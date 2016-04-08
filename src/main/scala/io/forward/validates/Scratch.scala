@@ -10,4 +10,13 @@ class Scratch {
 
   def isValid[A,B](xor: Xor[A,B]) = xor.isRight
 
+  def combine[S,T](obj: T, validations: List[Validation[S, T]]): Validation[List[S], T] = {
+    val errors = validations.foldLeft(List.empty[String]) { case (xs, validation) =>
+      validation match {
+        case Valid(_) => xs
+        case Invalid(error) => error :: xs
+      }
+    }
+    if (errors.isEmpty) Valid(obj) else Invalid(obj)
+  }
 }
