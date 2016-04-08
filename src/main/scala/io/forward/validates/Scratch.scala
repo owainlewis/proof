@@ -17,6 +17,6 @@ class Scratch {
         case Invalid(error) => error :: xs
       }
     }
-    if (errors.isEmpty) Valid(obj) else Invalid(obj)
+    if (errors.isEmpty) Valid(obj) else Invalid(errors)
   }
 }
