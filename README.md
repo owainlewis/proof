@@ -29,6 +29,8 @@ object UserValidator {
 }
 ```
 
+### Combine validations
+
 Perhaps the most common requirement for validation is the ability to combine multiple validations into a list. For examples we will
 validate a users age and email and return either a list of validation errors of a user if valid.
 
