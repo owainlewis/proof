@@ -4,7 +4,7 @@ A small library for simple and consistent domain validation.
 
 ## Overview
 
-This library provides a simpe type for representing validation along with some helper functions for cominbing multiple validations into one.
+This library provides a simpe type for representing validation along with some helper functions for cominbing multiple validations into one. It also provides validation functions for some of the most common domain validation tasks.
 
 ## Examples
 
@@ -83,8 +83,6 @@ scala> validateWith(User("Mary", 14), validateAge, validateName)
 res3: io.forward.validates.Validation[List[String],User] = Invalid(List(User name must be Jack, User must be over 18))
 
 ```
-
-A library for generic validation
 
 ## Validations
 
