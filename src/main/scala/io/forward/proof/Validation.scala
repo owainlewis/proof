@@ -67,5 +67,5 @@ object Validation  {
     * @tparam T Validation object type
     */
   def validateWith[S,T](obj: T, validations: ((T) => Validation[S,T])*): Validation[List[S], T] =
-    combine(obj, validations.toList.map(f => f(obj)))
+    combine(obj, validations.toList.map(f => f(obj))).leftMap(_.reverse)
 }

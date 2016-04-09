@@ -22,4 +22,43 @@ class ValidationSpec extends WordSpecLike with Matchers {
       Invalid("Hello").invalid shouldBe true
     }
   }
+
+  "Validating types" should {
+
+    case class User(name: String, age: Int, email:  String)
+
+    import Implicits._
+
+    val ageValid: (User) => Validation[String, User] = (user: User) =>
+      if (user.age > 18) user.valid else "Must be over 18".invalid
+
+    val emailValid: (User) => Validation[String, User] = (user: User) =>
+      if (user.email.contains("@")) user.valid else "Email must be valid".invalid
+
+    val validUser = User("Jack", 25, "jack@twitter.com")
+
+    val invalidUser = User("Jill", 17, "foobar")
+
+    "check if an age is valid" in {
+      ageValid(validUser) shouldBe Valid(validUser)
+    }
+    "check if an age is invalid" in {
+      ageValid(invalidUser) shouldBe Invalid("Must be over 18")
+    }
+    "check if an email is valid" in {
+      emailValid(validUser) shouldBe Valid(validUser)
+    }
+    "check if an email is invalid" in {
+      emailValid(invalidUser) shouldBe Invalid("Email must be valid")
+    }
+    "combine validations" when {
+
+      "given a valid user" in {
+        validateWith(validUser, ageValid, emailValid) shouldBe Valid(validUser)
+      }
+      "given an invalid user" in {
+        validateWith(invalidUser, ageValid, emailValid) shouldBe Invalid(List("Must be over 18", "Email must be valid"))
+      }
+    }
+  }
 }
