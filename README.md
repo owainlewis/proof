@@ -2,6 +2,9 @@
 
 A small library for simple and consistent domain validation.
 
+Although there are other methods for validation (Scalaz, Cats and Scalactic) this library offers a smaller footprint and
+less complexity. It should be easier to use but conversely it will not be as flexable or powerful as something like Scalaz/Cats.
+
 ## Overview
 
 This library provides a simpe type for representing validation along with some helper functions for cominbing multiple validations into one. It also provides validation functions for some of the most common domain validation tasks.
