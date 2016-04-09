@@ -57,6 +57,30 @@ object UserValidator {
 
 ```
 
+## Validations
+
+### String
+
++ Max length
++ Min length
++ Regex
++ Email
++ Alpha
++ Numeric
++ AlphaNumeric
+
+### Credit Card
+
++ Luhn Check
+
+### Numbers
+
++ Less than
++ Greater than
++ Between
+
+### Dates
+
 ## More Examples
 
 ```scala
@@ -85,27 +109,3 @@ scala> validateWith(User("Mary", 14), validateAge, validateName)
 res3: io.forward.validates.Validation[List[String],User] = Invalid(List(User name must be Jack, User must be over 18))
 
 ```
-
-## Validations
-
-### String
-
-+ Max length
-+ Min length
-+ Regex
-+ Email
-+ Alpha
-+ Numeric
-+ AlphaNumeric
-
-### Credit Card
-
-+ Luhn Check
-
-### Numbers
-
-+ Less than
-+ Greater than
-+ Between
-
-### Dates
