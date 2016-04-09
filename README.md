@@ -21,9 +21,11 @@ import io.forward.validates.Validation._
 
 object UserValidator {
 
-  def ageValid(user: User): Validation[String, User] = if (user.age > 18) Valid(user) else Invalid("User must be over 18")
+  def ageValid(user: User): Validation[String, User] = 
+    if (user.age > 18) Valid(user) else Invalid("User must be over 18")
 
-  def emailValid(user: User): Validation[String, User] = if (user.email.contains("@")) Valid(user) else Invalid("User email invalid")
+  def emailValid(user: User): Validation[String, User] = 
+    if (user.email.contains("@")) Valid(user) else Invalid("User email invalid")
 }
 ```
 
@@ -41,11 +43,14 @@ object UserValidator {
    * Check if a user is valid. Return either a list of validation errors or a user
    *
    */
-  def validate(user: User): Validation[List[String], User] = validateWith(user, ageValid, emailValid)
+  def validate(user: User): Validation[List[String], User] = 
+    validateWith(user, ageValid, emailValid)
 
-  private def ageValid(user: User): Validation[String, User] = if (user.age > 18) Valid(user) else Invalid("User must be over 18")
+  private def ageValid(user: User): Validation[String, User] = 
+    if (user.age > 18) Valid(user) else Invalid("User must be over 18")
 
-  private def emailValid(user: User): Validation[String, User] = if (user.email.contains("@")) Valid(user) else Invalid("User email invalid")
+  private def emailValid(user: User): Validation[String, User] = 
+    if (user.email.contains("@")) Valid(user) else Invalid("User email invalid")
 }
 
 ```
