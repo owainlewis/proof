@@ -4,7 +4,7 @@ A small library for simple and consistent domain validation.
 
 Although there are other libraries for validation in Scala (Scalaz, Cats and Scalactic) this library offers a much smaller footprint and less complexity. 
 
-It should be easier to use but conversely it will not be as powerful or generic as something like Scalaz/Cats.
+Proof should be very easy to use for typical validation tasks but, conversely, will not be as powerful or generic as something like Scalaz/Cats.
 
 ## Overview
 
