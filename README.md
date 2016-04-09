@@ -61,7 +61,25 @@ object UserValidator {
 
 ```
 
+## Implicits
+
+Implicits are available for a nicer syntax over validations
+
+```
+scala> import io.forward.proof.Implicits._
+import io.forward.proof.Implicits._
+
+scala> 1.valid[String]
+res1: io.forward.proof.Validation[String,Int] = Valid(1)
+
+scala> "Must be valid".invalid[Int]
+res2: io.forward.proof.Validation[String,Int] = Invalid(Must be valid)
+
+```
+
 ## Validations
+
+Proof provides validation functions for some of the most common validation tasks:
 
 ### String
 
@@ -85,31 +103,7 @@ object UserValidator {
 
 ### Dates
 
-## More Examples
++ Before
++ After
++ Within (e.g 2 hours of)
 
-```scala
-scala> import io.forward.validates.Validation._
-import io.forward.validates.Validation._
-
-scala> case class User(name: String, age: Int)
-defined class User
-
-scala> val user = User("Jack", 25)
-user: User = User(Jack,25)
-
-scala> def validateAge(user: User) = if (user.age > 18) Valid(user) else Invalid("User must be over 18")
-validateAge: (user: User)io.forward.validates.Validation[String,User]
-
-scala> validateWith(user, validateAge)
-res0: io.forward.validates.Validation[List[String],User] = Valid(User(Jack,25))
-
-scala> def validateName(user: User) = if (user.name == "Jack") Valid(user) else Invalid("User name must be Jack")
-validateName: (user: User)io.forward.validates.Validation[String,User]
-
-scala> validateWith(user, validateAge, validateName)
-res1: io.forward.validates.Validation[List[String],User] = Valid(User(Jack,25))
-
-scala> validateWith(User("Mary", 14), validateAge, validateName)
-res3: io.forward.validates.Validation[List[String],User] = Invalid(List(User name must be Jack, User must be over 18))
-
-```
