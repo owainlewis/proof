@@ -22,14 +22,15 @@ Next we'll write our validation functions
 
 ```scala
 import io.forward.validates.Validation._
+import io.forward.proof.Implicits._
 
 object UserValidator {
 
   def ageValid(user: User): Validation[String, User] = 
-    if (user.age > 18) Valid(user) else Invalid("User must be over 18")
+    if (user.age > 18) user.valid else "User must be over 18".invalid
 
   def emailValid(user: User): Validation[String, User] = 
-    if (user.email.contains("@")) Valid(user) else Invalid("User email invalid")
+    if (user.email.contains("@")) user.valid else "User email invalid".invalid
 }
 ```
 
