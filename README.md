@@ -15,7 +15,12 @@ import io.forward.proof.Validation._
 
 scala> validate("HELLO", lengthIs(3), startsWith("HE"), endsWith("Y"))
 res1: io.forward.proof.Validation[List[String],String] = 
-  Invalid(List(Expected string with length 3, Expected string to end with Y))
+  Invalid(List("Expected string with length 3", "Expected string to end with Y"))
+  
+validate("HELLO", lengthIs(3), startsWith("HE"), endsWith("Y")) match {
+  case Invalid(errors) => print("Not valid")
+  case Valid(result) => print("OK")
+}
 ```
 
 ## Overview
