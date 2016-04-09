@@ -1,6 +1,6 @@
 # Proof
 
-A small library for simple and consistent domain validation.
+A generic validation library for Scala.
 
 Although there are other libraries for validation in Scala (Scalaz, Cats and Scalactic) this library offers a much smaller footprint and less complexity. 
 
