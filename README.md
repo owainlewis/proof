@@ -6,6 +6,16 @@ Although there are other libraries for validation in Scala (Scalaz, Cats and Sca
 
 Proof should be very easy to use for typical validation tasks but, conversely, will not be as powerful or generic as something like Scalaz/Cats.
 
+```scala
+import io.forward.proof.std.Core._
+import io.forward.proof.Validation._
+
+validate("HELLO", lengthIs(3), startsWith("HE"), endsWith("Y"))
+
+res1: io.forward.proof.Validation[List[String],String] = 
+  Invalid(List(Expected string with length 3, Expected string to end with Y))
+```
+
 ## Overview
 
 This library provides a simpe type for representing validation along with some helper functions for cominbing multiple validations into one. It also provides validation functions for some of the most common domain validation tasks.
