@@ -13,14 +13,6 @@ sealed abstract class Validation[+A, +B] extends Product with Serializable {
     case Validation.Valid(b) => fb(b)
   }
 
-  def valid: Boolean = fold(_ => false, _ => true)
-
-  def invalid: Boolean = fold(_ => true, _ => false)
-
-  def toEither: Either[A, B] = fold(Left(_), Right(_))
-
-  def toOption: Option[B] = fold(_ => None, Some(_))
-
   def leftMap[C](f: A => C): Validation[C,B] = this match {
     case Validation.Invalid(x) => Validation.Invalid(f(x))
     case r @ Validation.Valid(_) => r
@@ -32,6 +24,22 @@ sealed abstract class Validation[+A, +B] extends Product with Serializable {
   }
 
   def map[C](f: B => C): Validation[A,C] = rightMap(f)
+
+  /**
+    * Take a validation of [A,B] and convert into a validation of [A,C] where C is some constant value
+    *
+    * This can be used to take, for example, a validation of [String, String] and lift it to a validation [String, User]
+    *
+    */
+  def constant[C](obj: C): Validation[A, C] = this.map(_ => obj)
+
+  def valid: Boolean = fold(_ => false, _ => true)
+
+  def invalid: Boolean = fold(_ => true, _ => false)
+
+  def toEither: Either[A, B] = fold(Left(_), Right(_))
+
+  def toOption: Option[B] = fold(_ => None, Some(_))
 }
 
 object Validation  {
@@ -68,6 +76,6 @@ object Validation  {
     * @tparam S Error type
     * @tparam T Validation object type
     */
-  def validateWith[S,T](obj: T, validations: ((T) => Validation[S,T])*): Validation[List[S], T] =
+  def validate[S,T](obj: T, validations: ((T) => Validation[S,T])*): Validation[List[S], T] =
     combine(obj, validations.toList.map(f => f(obj))).leftMap(_.reverse)
 }

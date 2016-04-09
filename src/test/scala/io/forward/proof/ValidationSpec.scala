@@ -54,10 +54,10 @@ class ValidationSpec extends WordSpecLike with Matchers {
     "combine validations" when {
 
       "given a valid user" in {
-        validateWith(validUser, ageValid, emailValid) shouldBe Valid(validUser)
+        validate(validUser, ageValid, emailValid) shouldBe Valid(validUser)
       }
       "given an invalid user" in {
-        validateWith(invalidUser, ageValid, emailValid) shouldBe Invalid(List("Must be over 18", "Email must be valid"))
+        validate(invalidUser, ageValid, emailValid) shouldBe Invalid(List("Must be over 18", "Email must be valid"))
       }
     }
   }

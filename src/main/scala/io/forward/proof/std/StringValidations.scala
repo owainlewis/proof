@@ -1,23 +1,28 @@
 package io.forward.proof.std
 
-import io.forward.proof.{Implicits, Validation}
+import io.forward.proof.Validation
 
 trait StringValidations {
 
-  import Implicits._
+  val validateLength: (Int, String) => Validation[String, String] = (n: Int, input: String) =>
+    liftBool({ s: String => s.length == n }, input, s"Expected string with length $n")
 
-  val validateLength = (n: Int, input: String) =>
-    if (input.length == n) input.valid else s"Expected string with length $n".invalid
+  val stringLengthIs = (n: Int) => validateLength.curried(n)
 
-  val lengthIs = (n: Int) => validateLength.curried(n)
+  val validateLengthLessThan: (Int, String) => Validation[String, String] = (n: Int, input: String) =>
+    liftBool({ s: String => s.length < n }, input, s"Expected string with length less than $n")
 
-  val validateLessThan = (n: Int, input: String) =>
-    if (input.length < n) input.valid else s"Expected string with length less than $n".invalid
+  val stringLengthIsLessThan = (n: Int) => validateLengthLessThan.curried(n)
 
-  val lengthLessThan = (n: Int) => validateLength.curried(n)
+  val validateLengthMoreThan: (Int, String) => Validation[String, String] = (n: Int, input: String) =>
+    liftBool({ s: String => s.length > n }, input, s"Expected string with length greater than $n")
 
-  val validateGreaterThan = (n: Int, input: String) =>
-    if (input.length > n) input.valid else s"Expected string with length greater than $n".invalid
+  val stringLengthIsMoreThan = (n: Int) => validateLengthMoreThan.curried(n)
 
-  val lengthGreaterThan = (n: Int) => validateGreaterThan.curried(n)
+  val validateContains: (String, String) => Validation[String, String] = (sub: String, input: String) =>
+    liftBool({ s: String => s.contains(sub) }, input, s"Expected string to contain $sub")
+
+  val stringContains = (sub: String) => validateContains.curried(sub)
+
+
 }

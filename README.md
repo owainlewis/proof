@@ -39,7 +39,7 @@ object UserValidator {
 Perhaps the most common requirement for validation is the ability to combine multiple validations into a list. For examples we will
 validate a users age and email and return either a list of validation errors of a user if valid.
 
-This logic is achieved using the validateWith method.
+This logic is achieved using the validate method.
 
 
 ```scala
@@ -51,7 +51,7 @@ object UserValidator {
    *
    */
   def validate(user: User): Validation[List[String], User] = 
-    validateWith(user, ageValid, emailValid)
+    validate(user, ageValid, emailValid)
 
   private def ageValid(user: User): Validation[String, User] = 
     if (user.age > 18) Valid(user) else Invalid("User must be over 18")
