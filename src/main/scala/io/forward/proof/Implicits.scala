@@ -3,6 +3,7 @@ package io.forward.proof
 import Validation._
 
 object Implicits {
+  
   implicit def toValidType[T](t: T): ValidType[T] = new ValidType(t)
   class ValidType[T](t: T) {
     def valid[S]: Validation[S,T] = Valid(t)
