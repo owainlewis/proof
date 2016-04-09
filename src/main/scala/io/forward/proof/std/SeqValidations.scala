@@ -1,5 +1,5 @@
 package io.forward.proof.std
 
-trait Numeric {
+trait SeqValidations {
 
 }

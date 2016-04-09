@@ -1,5 +1,5 @@
 package io.forward.proof.std
 
-object Core extends String {
 
-}
+
+object Core extends StringValidations
