@@ -7,7 +7,6 @@ package io.forward.proof
   * @tparam B Type for Valid
   */
 sealed abstract class Validation[+A, +B] extends Product with Serializable {
-
   def fold[C](fa: A => C, fb: B => C): C = this match {
     case Validation.Invalid(a) => fa(a)
     case Validation.Valid(b) => fb(b)
