@@ -1,10 +1,12 @@
 organization := "io.forward"
 
-name := "validates"
+name := "proof"
 
-version := "1.0"
+version := "0.1.0"
 
 scalaVersion := "2.11.8"
 
-libraryDependencies += "org.typelevel" %% "cats" % "0.4.1"
+libraryDependencies ++= Seq(
+  "org.scalatest" %% "scalatest" % "2.2.6" % "test"
+)
     

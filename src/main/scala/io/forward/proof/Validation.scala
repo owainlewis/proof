@@ -1,4 +1,4 @@
-package io.forward.validates
+package io.forward.proof
 
 /**
   * Type representing the outcome of a validation.

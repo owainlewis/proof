@@ -1,8 +1,8 @@
-package io.forward.validates
+package io.forward.proof
 
-import io.forward.validates.Validation._
+import io.forward.proof.Validation._
 
-object Validates {
+object Domain {
   /**
     * Validate that a string is exactly some length
     *

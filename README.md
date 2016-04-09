@@ -1,4 +1,4 @@
-# Validates
+# Proof
 
 A small library for simple and consistent domain validation.
 
