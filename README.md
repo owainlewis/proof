@@ -21,7 +21,7 @@ case class User(name: String, age: Int, email: String)
 Next we'll write our validation functions
 
 ```scala
-import io.forward.validates.Validation._
+import io.forward.proof.Validation._
 import io.forward.proof.Implicits._
 
 object UserValidator {
@@ -43,7 +43,7 @@ This logic is achieved using the validateWith method.
 
 
 ```scala
-import io.forward.validates.Validation._
+import io.forward.proof.Validation._
 
 object UserValidator {
   /**
