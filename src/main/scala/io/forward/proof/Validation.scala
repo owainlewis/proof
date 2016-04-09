@@ -58,7 +58,9 @@ object Validation  {
 
   /**
     * Given an input type validate it with many validation functions. This can be used to perform
-    * validation accumulation on a range of validation functions for a given type
+    * validation accumulation on a range of validation functions for a given type.
+    * 
+    * It preserves the validation ordering when returning errors.
     *
     * @param obj An object to validate i.e User(name = "Jack", age = 25)
     * @param validations Any number of validation functions in the form (T) => Validation[S,T]
