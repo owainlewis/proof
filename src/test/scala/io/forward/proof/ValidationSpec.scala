@@ -40,24 +40,24 @@ class ValidationSpec extends WordSpecLike with Matchers {
     val invalidUser = User("Jill", 17, "foobar")
 
     "check if an age is valid" in {
-      ageValid(validUser) shouldBe Valid(validUser)
+      ageValid(validUser) shouldBe validUser.valid
     }
     "check if an age is invalid" in {
-      ageValid(invalidUser) shouldBe Invalid("Must be over 18")
+      ageValid(invalidUser) shouldBe "Must be over 18".invalid
     }
     "check if an email is valid" in {
-      emailValid(validUser) shouldBe Valid(validUser)
+      emailValid(validUser) shouldBe validUser.valid
     }
     "check if an email is invalid" in {
-      emailValid(invalidUser) shouldBe Invalid("Email must be valid")
+      emailValid(invalidUser) shouldBe "Email must be valid".invalid
     }
     "combine validations" when {
 
       "given a valid user" in {
-        validate(validUser, ageValid, emailValid) shouldBe Valid(validUser)
+        runValidations(validUser, ageValid, emailValid) shouldBe validUser.valid
       }
       "given an invalid user" in {
-        validate(invalidUser, ageValid, emailValid) shouldBe Invalid(List("Must be over 18", "Email must be valid"))
+        runValidations(invalidUser, ageValid, emailValid) shouldBe List("Must be over 18", "Email must be valid").invalid
       }
     }
   }

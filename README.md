@@ -6,84 +6,83 @@ Although there are other libraries for validation in Scala (Scalaz, Cats and Sca
 
 Proof should be very easy to use for typical validation tasks but, conversely, will not be as powerful or generic as something like Scalaz/Cats.
 
-```scala
-scala> import io.forward.proof.std.Core._
-import io.forward.proof.std.Core._
+## Example
 
-scala> import io.forward.proof.Validation._
-import io.forward.proof.Validation._
-
-scala> validate("HELLO", lengthIs(3), startsWith("HE"), endsWith("Y"))
-res1: io.forward.proof.Validation[List[String],String] = 
-  Invalid(List("Expected string with length 3", "Expected string to end with Y"))
-  
-validate("HELLO", lengthIs(3), startsWith("HE"), endsWith("Y")) match {
-  case Invalid(errors) => print("Not valid")
-  case Valid(result) => print("OK")
-}
-```
-
-## Overview
-
-This library provides a simpe type for representing validation along with some helper functions for cominbing multiple validations into one. It also provides validation functions for some of the most common domain validation tasks.
-
-## Examples
-
-Let's write a function to validate a user
+This example demonstrates how you might write a user validation object using this library
 
 ```scala
-case class User(name: String, age: Int, email: String)
-```
-
-Next we'll write our validation functions
-
-```scala
+import io.forward.proof._
 import io.forward.proof.Validation._
 import io.forward.proof.Implicits._
+import io.forward.proof.std.StringValidations._
 
-object UserValidator {
+case class User(name: String, age: Int, email: String)
 
-  def ageValid(user: User): Validation[String, User] = 
-    if (user.age > 18) user.valid else "User must be over 18".invalid
+object UserValidation extends Validator[User] {
+  /**
+    * Given a user to validate, return either a user or a list of errors
+    */
+  def validate(user: User): Validation[List[String], User] =
+    runValidations(user, validateAge, validateEmail)
 
-  def emailValid(user: User): Validation[String, User] = 
-    if (user.email.contains("@")) user.valid else "User email invalid".invalid
+  /**
+    * Validate a user is over 18
+    */
+  private def validateAge(user: User): Validation[String, User] =
+    if (user.age >= 18) user.valid else "Must be 18 or over".invalid
+
+  /**
+    * Validate a user email contains an @ char. The leftMap function here is used to set the
+    * error message to something custom in the case of failure. The constant method changes the return
+    * type of the success case to always return a User type. This is helpful for turning a validation
+    * of some type [A,B] into a validation of [A,C]
+    */
+  private def validateEmail(user: User): Validation[String, User] =
+    stringMatches(".*[@].*", user.email).constant(user).leftMap(_ => "Invalid email")
 }
 ```
 
-### Combine validations
-
-Perhaps the most common requirement for validation is the ability to combine multiple validations into a list. For examples we will
-validate a users age and email and return either a list of validation errors of a user if valid.
-
-This logic is achieved using the validate method.
-
+We can use pattern matching on the Validation types (Valid or Invalid) to handle the success and failure cases easily.
 
 ```scala
-import io.forward.proof.Validation._
 
-object UserValidator {
-  /**
-   * Check if a user is valid. Return either a list of validation errors or a user
-   *
-   */
-  def validate(user: User): Validation[List[String], User] = 
-    validate(user, ageValid, emailValid)
-
-  private def ageValid(user: User): Validation[String, User] = 
-    if (user.age > 18) Valid(user) else Invalid("User must be over 18")
-
-  private def emailValid(user: User): Validation[String, User] = 
-    if (user.email.contains("@")) Valid(user) else Invalid("User email invalid")
+UserValidation.validate(User("Mary Jane", 14, "l33tHak0r")) match {
+  case Invalid(errors) => println(errors.mkString(", "))
+  case Valid(_) => println("Valid")
 }
 
+// => Must be 18 or over, Invalid email
+
 ```
+
+A *valid* and *invalid* method is available on every validation to check for success and failure
+
+```scala
+scala> import io.forward.proof.Implicits._
+import io.forward.proof.Implicits._
+
+scala> "Hello World".invalid[String].valid
+res2: Boolean = false
+
+scala> "Hello World".invalid[String].invalid
+res3: Boolean = true
+```
+
+## In Depth
+
+This library provides a simple type for representing validation along with some helper functions
+for combining multiple validations into a list of validation errors.
+It also provides validation functions for some of the most common domain validation tasks.
+
+### Combining validations
+
+Use the *runValidations* method to combine multiple singular validations into a success case or a list of validation errors.
 
 ## Implicits
 
-Implicits are available for a nicer syntax over validations
+Implicits are available for a nicer syntax when creating validations
 
-```
+```scala
 scala> import io.forward.proof.Implicits._
 import io.forward.proof.Implicits._
 
@@ -91,7 +90,7 @@ scala> 1.valid[String]
 res1: io.forward.proof.Validation[String,Int] = Valid(1)
 
 scala> "Must be valid".invalid[Int]
-res2: io.forward.proof.Validation[String,Int] = Invalid(Must be valid)
+res2: io.forward.proof.Validation[String,Int] = Invalid("Must be valid")
 
 ```
 
@@ -101,13 +100,16 @@ Proof provides validation functions for some of the most common validation tasks
 
 ### String
 
++ Length equals
 + Max length
 + Min length
-+ Regex
-+ Email
++ Contains
++ Matches
 + Alpha
-+ Numeric
-+ AlphaNumeric
+
+## Roadmap
+
+The following validations may be added at some piont
 
 ### Credit Card
 

@@ -2,8 +2,11 @@ package io.forward.proof.std
 
 import io.forward.proof.Validation
 
-import scala.util.matching.Regex
-
+/**
+  * Curried versions of the standard string validation functions for a nicer DSL
+  *
+  * validate("http://google.com", lengthLessThan(20), startsWith("http"))
+  */
 trait StringValidations {
 
   import StringValidations._
@@ -54,7 +57,19 @@ object StringValidations {
     */
   val stringEndsWith: (String, String) => Validation[String, String] = (suffix: String, input: String) =>
     liftBool({ s: String => s.endsWith(suffix) }, input, s"Expected string to end with $suffix")
-
+  /**
+    *  Validates a string matches some regex pattern
+    */
   val stringMatches: (String, String) => Validation[String, String] = (expr: String, input: String) =>
     liftBool({ s: String => s.matches(expr) }, input, s"Expected string to match expr $expr")
+  /**
+    * Validates a string is not empty i.e whitespace
+    */
+  val stringNonEmpty: (String) => Validation[String, String] = (input: String) =>
+    liftBool({ s: String => s.trim.nonEmpty }, input, "Expected non empty string")
+  /**
+    * Validates a string only contains alpha chars
+    */
+  val stringIsAlpha: (String) => Validation[String, String] = (input: String) =>
+    liftBool({ s: String => s.matches("[A-Za-z]") }, input, "Expected string containing only alpha chars")
 }

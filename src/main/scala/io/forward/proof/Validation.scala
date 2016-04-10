@@ -7,10 +7,19 @@ package io.forward.proof
   * @tparam B Type for Valid
   */
 sealed abstract class Validation[+A, +B] extends Product with Serializable {
- 
+
   def fold[C](fa: A => C, fb: B => C): C = this match {
     case Validation.Invalid(a) => fa(a)
     case Validation.Valid(b) => fb(b)
+  }
+
+  def valid: Boolean = fold(_ => false, _ => true)
+
+  def invalid: Boolean = fold(_ => true, _ => false)
+
+  def flip: Validation[B,A] = this match {
+    case Validation.Invalid(a) => Validation.Valid(a)
+    case Validation.Valid(b) => Validation.Invalid(b)
   }
 
   def leftMap[C](f: A => C): Validation[C,B] = this match {
@@ -25,6 +34,11 @@ sealed abstract class Validation[+A, +B] extends Product with Serializable {
 
   def map[C](f: B => C): Validation[A,C] = rightMap(f)
 
+  def biMap[C,D](fa: A => C, fb: B => D): Validation[C, D] = this match {
+    case Validation.Invalid(a) => Validation.Invalid(fa(a))
+    case Validation.Valid(b) => Validation.Valid(fb(b))
+  }
+
   /**
     * Take a validation of [A,B] and convert into a validation of [A,C] where C is some constant value
     *
@@ -32,10 +46,6 @@ sealed abstract class Validation[+A, +B] extends Product with Serializable {
     *
     */
   def constant[C](obj: C): Validation[A, C] = this.map(_ => obj)
-
-  def valid: Boolean = fold(_ => false, _ => true)
-
-  def invalid: Boolean = fold(_ => true, _ => false)
 
   def toEither: Either[A, B] = fold(Left(_), Right(_))
 
@@ -76,6 +86,6 @@ object Validation  {
     * @tparam S Error type
     * @tparam T Validation object type
     */
-  def validate[S,T](obj: T, validations: ((T) => Validation[S,T])*): Validation[List[S], T] =
+  def runValidations[S,T](obj: T, validations: ((T) => Validation[S,T])*): Validation[List[S], T] =
     combine(obj, validations.toList.map(f => f(obj))).leftMap(_.reverse)
 }
