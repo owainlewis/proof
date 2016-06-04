@@ -1,5 +1,4 @@
 package io.forward.proof
-
 /**
   * Type representing the outcome of a validation.
   *
@@ -32,7 +31,7 @@ sealed abstract class Validation[+A, +B] extends Product with Serializable {
     case r @ Validation.Valid(x) => Validation.Valid(f(x))
   }
 
-  def map[C](f: B => C): Validation[A,C] = rightMap(f)
+  def map[C](f: B => C): Validation[A,C] = biMap(identity, f)
 
   def biMap[C,D](fa: A => C, fb: B => D): Validation[C, D] = this match {
     case Validation.Invalid(a) => Validation.Invalid(fa(a))
@@ -65,15 +64,9 @@ object Validation  {
     *
     */
   def combine[S,T](obj: T, validations: List[Validation[S, T]]): Validation[List[S], T] = {
-    val errors = validations.foldLeft(List.empty[S]) { case (xs, validation) =>
-      validation match {
-        case Valid(_) => xs
-        case Invalid(error) => error :: xs
-      }
-    }
+    val errors = validations.collect { case Invalid(error) => error }
     if (errors.isEmpty) Valid(obj) else Invalid(errors)
   }
-
   /**
     * Given an input type validate it with many validation functions. This can be used to perform
     * validation accumulation on a range of validation functions for a given type.
@@ -87,5 +80,5 @@ object Validation  {
     * @tparam T Validation object type
     */
   def runValidations[S,T](obj: T, validations: ((T) => Validation[S,T])*): Validation[List[S], T] =
-    combine(obj, validations.toList.map(f => f(obj))).leftMap(_.reverse)
+    combine(obj, validations.toList.map(_.apply(obj)))
 }
