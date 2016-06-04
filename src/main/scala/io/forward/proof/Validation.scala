@@ -14,11 +14,8 @@ sealed abstract class Validation[+A, +B] extends Product with Serializable {
       fb(b)
   }
 
-  def valid: Boolean = 
-    fold(_ => false, _ => true)
-
-  def invalid: Boolean = 
-    fold(_ => true, _ => false)
+  def valid: Boolean = fold(_ => false, _ => true)
+  def invalid: Boolean = fold(_ => true, _ => false)
 
   def flip: Validation[B,A] = this match {
     case Validation.Invalid(a) => 
