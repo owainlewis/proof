@@ -8,34 +8,44 @@ package io.forward.proof
 sealed abstract class Validation[+A, +B] extends Product with Serializable {
 
   def fold[C](fa: A => C, fb: B => C): C = this match {
-    case Validation.Invalid(a) => fa(a)
-    case Validation.Valid(b) => fb(b)
+    case Validation.Invalid(a) => 
+      fa(a)
+    case Validation.Valid(b) => 
+      fb(b)
   }
 
-  def valid: Boolean = fold(_ => false, _ => true)
+  def valid: Boolean = 
+    fold(_ => false, _ => true)
 
-  def invalid: Boolean = fold(_ => true, _ => false)
+  def invalid: Boolean = 
+    fold(_ => true, _ => false)
 
   def flip: Validation[B,A] = this match {
-    case Validation.Invalid(a) => Validation.Valid(a)
-    case Validation.Valid(b) => Validation.Invalid(b)
+    case Validation.Invalid(a) => 
+      Validation.Valid(a)
+    case Validation.Valid(b) => 
+      Validation.Invalid(b)
   }
 
   def leftMap[C](f: A => C): Validation[C,B] = this match {
-    case Validation.Invalid(x) => Validation.Invalid(f(x))
+    case Validation.Invalid(x) => 
+      Validation.Invalid(f(x))
     case r @ Validation.Valid(_) => r
   }
 
   def rightMap[C](f: B => C): Validation[A,C] = this match {
-    case r @ Validation.Invalid(_)      => r
+    case r @ Validation.Invalid(_) => r
     case r @ Validation.Valid(x) => Validation.Valid(f(x))
   }
 
-  def map[C](f: B => C): Validation[A,C] = biMap(identity, f)
+  def map[C](f: B => C): Validation[A,C] = 
+    biMap(identity, f)
 
   def biMap[C,D](fa: A => C, fb: B => D): Validation[C, D] = this match {
-    case Validation.Invalid(a) => Validation.Invalid(fa(a))
-    case Validation.Valid(b) => Validation.Valid(fb(b))
+    case Validation.Invalid(a) => 
+      Validation.Invalid(fa(a))
+    case Validation.Valid(b) => 
+      Validation.Valid(fb(b))
   }
 
   /**
